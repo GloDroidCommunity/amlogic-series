@@ -1,0 +1,64 @@
+From 4eca829e1c9333c8c3c412e269ce315abf39f3c1 Mon Sep 17 00:00:00 2001
+From: Roman Stratiienko <r.stratiienko@gmail.com>
+Date: Sun, 30 Apr 2023 14:34:21 +0300
+Subject: [PATCH 5/6] part: efi: Use a single definition to specify the primary
+ GPT position
+
+Some vendors (like Amlogic) store a bootloader at LBA1, therefore
+relocating the primary GPT header is the only way to have GPT support
+on such boards.
+
+From now on, changing the GPT_PRIMARY_PARTITION_TABLE_LBA definition
+is enough for relocating the primary GPT table.
+
+Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
+---
+ disk/part_efi.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/disk/part_efi.c b/disk/part_efi.c
+index 80a44dc9f0..5f90b117d7 100644
+--- a/disk/part_efi.c
++++ b/disk/part_efi.c
+@@ -382,7 +382,8 @@ int write_gpt_table(struct blk_desc *dev_desc,
+ 	gpt_h->header_crc32 = cpu_to_le32(calc_crc32);
+ 
+ 	/* Write the First GPT to the block right after the Legacy MBR */
+-	if (blk_dwrite(dev_desc, 1, 1, gpt_h) != 1)
++	if (blk_dwrite(dev_desc, (lbaint_t)le64_to_cpu(gpt_h->my_lba), 1,
++		       gpt_h) != 1)
+ 		goto err;
+ 
+ 	if (blk_dwrite(dev_desc, le64_to_cpu(gpt_h->partition_entry_lba),
+@@ -529,7 +530,7 @@ int gpt_fill_pte(struct blk_desc *dev_desc,
+ 
+ static uint32_t partition_entries_offset(struct blk_desc *dev_desc)
+ {
+-	uint32_t offset_blks = 2;
++	uint32_t offset_blks = GPT_PRIMARY_PARTITION_TABLE_LBA + 1;
+ 	uint32_t __maybe_unused offset_bytes;
+ 	int __maybe_unused config_offset;
+ 
+@@ -567,8 +568,8 @@ static uint32_t partition_entries_offset(struct blk_desc *dev_desc)
+ 	 * The earliest LBA this can be at is LBA#2 (i.e. right behind
+ 	 * the (protective) MBR and the GPT header.
+ 	 */
+-	if (offset_blks < 2)
+-		offset_blks = 2;
++	if (offset_blks < (GPT_PRIMARY_PARTITION_TABLE_LBA + 1))
++		offset_blks = GPT_PRIMARY_PARTITION_TABLE_LBA + 1;
+ 
+ 	return offset_blks;
+ }
+@@ -579,7 +580,7 @@ int gpt_fill_header(struct blk_desc *dev_desc, gpt_header *gpt_h,
+ 	gpt_h->signature = cpu_to_le64(GPT_HEADER_SIGNATURE_UBOOT);
+ 	gpt_h->revision = cpu_to_le32(GPT_HEADER_REVISION_V1);
+ 	gpt_h->header_size = cpu_to_le32(sizeof(gpt_header));
+-	gpt_h->my_lba = cpu_to_le64(1);
++	gpt_h->my_lba = cpu_to_le64(GPT_PRIMARY_PARTITION_TABLE_LBA);
+ 	gpt_h->alternate_lba = cpu_to_le64(dev_desc->lba - 1);
+ 	gpt_h->last_usable_lba = cpu_to_le64(dev_desc->lba - 34);
+ 	gpt_h->partition_entry_lba =
+-- 
+2.37.2
+

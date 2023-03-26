@@ -1,0 +1,30 @@
+From dfae66ee2f3056a1ba6a41aa08e81a9c6acdf99b Mon Sep 17 00:00:00 2001
+From: Roman Stratiienko <r.stratiienko@gmail.com>
+Date: Sun, 30 Apr 2023 17:01:18 +0300
+Subject: [PATCH 6/6] GLODROID: Shift GPT position to support Amlogic platform
+
+Amlogic expects bootloader on LBA1
+Shift the primary GPT header to 2MiB offset
+
+Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
+---
+ include/part_efi.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/part_efi.h b/include/part_efi.h
+index c68529b4da..8b8a99ebcc 100644
+--- a/include/part_efi.h
++++ b/include/part_efi.h
+@@ -28,7 +28,8 @@
+ #define GPT_HEADER_CHROMEOS_IGNORE 0x454d45524f4e4749ULL // 'IGNOREME'
+ 
+ #define GPT_HEADER_REVISION_V1 0x00010000
+-#define GPT_PRIMARY_PARTITION_TABLE_LBA 1ULL
++/* AMLOGIC: Shift primary GPT header to 2MB from the beginning of the disk */
++#define GPT_PRIMARY_PARTITION_TABLE_LBA 4096
+ #define GPT_ENTRY_NUMBERS		CONFIG_EFI_PARTITION_ENTRIES_NUMBERS
+ #define GPT_ENTRY_SIZE			128
+ 
+-- 
+2.37.2
+

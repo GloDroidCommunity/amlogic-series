@@ -1,0 +1,51 @@
+From b533d1f960083f5f0e2a8e06f049ebe1e6a3d5cf Mon Sep 17 00:00:00 2001
+From: Roman Stratiienko <r.stratiienko@gmail.com>
+Date: Mon, 1 May 2023 13:54:10 +0300
+Subject: [PATCH] GLODROID: Allow placing primary GPT to 2MiB offset to support
+ Amlogic
+
+Amlogic expects a bootloader at LBA1, therefore normal GPT is not
+supported by the platform. Use relocated GPT instead.
+
+First, we check LBA1 for GPT presence to maintain support for external
+storage. Then we fall back to relocated GPT.
+
+Change-Id: I1c4201d9df6de71a3c8984d700ba39f913c7d6e0
+Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
+---
+ block/partitions/efi.c | 6 ++++++
+ block/partitions/efi.h | 1 +
+ 2 files changed, 7 insertions(+)
+
+diff --git a/block/partitions/efi.c b/block/partitions/efi.c
+index 7ca5c4c37..8266ced7b 100644
+--- a/block/partitions/efi.c
++++ b/block/partitions/efi.c
+@@ -614,6 +614,12 @@ static int find_valid_gpt(struct parsed_partitions *state, gpt_header **gpt,
+ 
+ 	good_pgpt = is_gpt_valid(state, GPT_PRIMARY_PARTITION_TABLE_LBA,
+ 				 &pgpt, &pptes);
++	/* Probe shifted GPT (GLODROID HACK to support GPT on AMLOGIC bootable image) */
++	if (!good_pgpt)
++		good_pgpt = is_gpt_valid(
++			state, AMLOGIC_SHIFTED_GPT_PRIMARY_PARTITION_TABLE_LBA,
++			&pgpt, &pptes);
++
+         if (good_pgpt)
+ 		good_agpt = is_gpt_valid(state,
+ 					 le64_to_cpu(pgpt->alternate_lba),
+diff --git a/block/partitions/efi.h b/block/partitions/efi.h
+index 8cc2b88d0..c30d629ac 100644
+--- a/block/partitions/efi.h
++++ b/block/partitions/efi.h
+@@ -30,6 +30,7 @@
+ #define GPT_HEADER_SIGNATURE 0x5452415020494645ULL
+ #define GPT_HEADER_REVISION_V1 0x00010000
+ #define GPT_PRIMARY_PARTITION_TABLE_LBA 1
++#define AMLOGIC_SHIFTED_GPT_PRIMARY_PARTITION_TABLE_LBA 4096
+ 
+ #define PARTITION_SYSTEM_GUID \
+     EFI_GUID( 0xC12A7328, 0xF81F, 0x11d2, \
+-- 
+2.37.2
+
