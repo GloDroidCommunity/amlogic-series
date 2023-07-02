@@ -1,7 +1,7 @@
-From 60cf423d4cd429be4fc580eebc5f3c5136606221 Mon Sep 17 00:00:00 2001
+From 9591b6d030aec18da36db5567c000dd4ebaf1ba1 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 30 Apr 2023 17:24:24 +0300
-Subject: [PATCH 3/7] platform: Support ATF-less builds
+Subject: [PATCH 3/9] platform: Support ATF-less builds
 
 Amlogic and Broadcom platforms do not require ATF.
 
@@ -61,5 +61,5 @@ index 5080ec2..5877beb 100644
  ifeq ($(PRODUCT_BOARD_PLATFORM),sunxi)
  ifneq ($(CRUST_FIRMWARE_DEFCONFIG),)
 -- 
-2.37.2
+2.39.2
 

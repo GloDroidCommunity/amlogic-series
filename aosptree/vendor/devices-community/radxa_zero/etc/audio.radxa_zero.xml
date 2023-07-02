@@ -1,0 +1,19 @@
+<audiohal>
+    <mixer card="0">
+        <init>
+            <!-- Set FRDDR_A/PCM0 sink to TDMOUT_A -->
+            <ctl name="FRDDR_A SINK 1 SEL" val="OUT 1" />
+            <!-- FRDDR_A/PCM0 source 1 Enable -->
+            <ctl name="FRDDR_A SRC 1 EN Switch" val="1" />
+            <!-- Set TDMOUT_A source from FRDDR_A/PCM0 -->
+            <ctl name="TDMOUT_B SRC SEL" val="IN 0" />
+            <!-- Enable HDMITX Glue -->
+            <ctl name="TOHDMITX Switch" val="1" />
+            <!-- Set HDMITX from TDMOUT_A -->
+            <ctl name="TOHDMITX I2S SRC" val="I2S B" />
+        </init>
+    </mixer>
+
+    <stream type="pcm" dir="out" card="0" device="0" rate="48000">
+    </stream>
+</audiohal>

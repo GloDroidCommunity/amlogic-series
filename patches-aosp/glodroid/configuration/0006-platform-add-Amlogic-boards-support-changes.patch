@@ -1,7 +1,7 @@
-From c54f775398c2a250c2fd4015d2a91768db70b029 Mon Sep 17 00:00:00 2001
+From 784304cd1b2856e41737bacf2f4522106ba82e63 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 30 Apr 2023 17:37:04 +0300
-Subject: [PATCH 6/7] platform: add Amlogic boards support changes
+Subject: [PATCH 6/9] platform: add Amlogic boards support changes
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 [RomanS: Rebased and modified after testing]
@@ -4365,5 +4365,5 @@ index 5877beb..917c14c 100644
  ifeq ($(PRODUCT_BOARD_PLATFORM),sunxi)
  $(PRODUCT_OUT)/bootloader-emmc.img: $(UBOOT_BINARY)
 -- 
-2.37.2
+2.39.2
 

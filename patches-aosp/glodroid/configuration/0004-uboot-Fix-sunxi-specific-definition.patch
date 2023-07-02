@@ -1,7 +1,7 @@
-From 9a1e9120a340e634732af2ee1512e8b010a9a934 Mon Sep 17 00:00:00 2001
+From bb3abba040a7ee226f62c9920b96d44df5b447ec Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 30 Apr 2023 17:26:23 +0300
-Subject: [PATCH 4/7] uboot: Fix sunxi-specific definition
+Subject: [PATCH 4/9] uboot: Fix sunxi-specific definition
 
 Semi-cosmetic change. Should not change anything for the firmware.
 
@@ -30,5 +30,5 @@ index 14415c4..09771f9 100644
  #define PLATFORM_HANDLE_FDT() \
   adtimg get dt --id=\$main_fdt_id dtb_start dtb_size main_fdt_index && \
 -- 
-2.37.2
+2.39.2
 

@@ -1,17 +1,59 @@
-From 7740246fcb8bfbc39f630fc177a6cdbacdfd9ba7 Mon Sep 17 00:00:00 2001
+From cded3a8251e5507a1e41a66e498465fa8ea02f48 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 30 Apr 2023 17:51:53 +0300
-Subject: [PATCH 7/7] DIRTY: Support Amlogic (Do not merge)
+Subject: [PATCH 7/9] DIRTY: Support Amlogic (Do not merge)
 
 Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
 ---
- platform/tools/gensdimg.sh    | 33 +++++++++++++-------
- platform/tools/move_gpt.py    | 59 +++++++++++++++++++++++++++++++++++
- platform/tools/tools.mk       |  3 ++
- platform/uboot/bootscript.cpp | 11 ++-----
- 4 files changed, 87 insertions(+), 19 deletions(-)
+ platform/common/amlogic/amlogic_defconfig |  4 +-
+ platform/common/amlogic/uboot-emmc.config |  1 -
+ platform/common/amlogic/uboot-sd.config   |  1 -
+ platform/tools/gensdimg.sh                | 33 ++++++++-----
+ platform/tools/move_gpt.py                | 59 +++++++++++++++++++++++
+ platform/tools/tools.mk                   |  3 ++
+ platform/uboot/bootscript.cpp             | 11 ++---
+ platform/uboot/uboot.mk                   |  4 +-
+ 8 files changed, 91 insertions(+), 25 deletions(-)
+ delete mode 100644 platform/common/amlogic/uboot-emmc.config
+ delete mode 100644 platform/common/amlogic/uboot-sd.config
  create mode 100755 platform/tools/move_gpt.py
 
+diff --git a/platform/common/amlogic/amlogic_defconfig b/platform/common/amlogic/amlogic_defconfig
+index 2089a20..52a3a16 100644
+--- a/platform/common/amlogic/amlogic_defconfig
++++ b/platform/common/amlogic/amlogic_defconfig
+@@ -2456,7 +2456,7 @@ CONFIG_DVB_HORUS3A=m
+ CONFIG_DVB_ASCOT2E=m
+ CONFIG_DVB_HELENE=m
+ CONFIG_DVB_DUMMY_FE=m
+-CONFIG_DRM=m
++CONFIG_DRM=y
+ CONFIG_DRM_DP_CEC=y
+ CONFIG_DRM_I2C_CH7006=m
+ CONFIG_DRM_I2C_SIL164=m
+@@ -2546,7 +2546,7 @@ CONFIG_DRM_ANALOGIX_ANX78XX=m
+ CONFIG_DRM_ANALOGIX_ANX7625=m
+ CONFIG_DRM_CDNS_MHDP8546=m
+ CONFIG_DRM_HISI_KIRIN=m
+-CONFIG_DRM_MESON=m
++CONFIG_DRM_MESON=y
+ CONFIG_DRM_BOCHS=m
+ CONFIG_DRM_GM12U320=m
+ CONFIG_DRM_SIMPLEDRM=m
+diff --git a/platform/common/amlogic/uboot-emmc.config b/platform/common/amlogic/uboot-emmc.config
+deleted file mode 100644
+index d511943..0000000
+--- a/platform/common/amlogic/uboot-emmc.config
++++ /dev/null
+@@ -1 +0,0 @@
+-CONFIG_FASTBOOT_FLASH_MMC_DEV=2
+diff --git a/platform/common/amlogic/uboot-sd.config b/platform/common/amlogic/uboot-sd.config
+deleted file mode 100644
+index 3e6db24..0000000
+--- a/platform/common/amlogic/uboot-sd.config
++++ /dev/null
+@@ -1 +0,0 @@
+-CONFIG_FASTBOOT_FLASH_MMC_DEV=1
 diff --git a/platform/tools/gensdimg.sh b/platform/tools/gensdimg.sh
 index c422d7c..4eb5db0 100755
 --- a/platform/tools/gensdimg.sh
@@ -206,6 +248,21 @@ index f419d65..5991b2c 100644
   then
    setenv bootdevice_path STRESC(__SYSFS_MMC1_PATH__);
   fi;
+diff --git a/platform/uboot/uboot.mk b/platform/uboot/uboot.mk
+index 917c14c..b75439f 100644
+--- a/platform/uboot/uboot.mk
++++ b/platform/uboot/uboot.mk
+@@ -91,8 +91,8 @@ endif
+ 
+ ifeq ($(PRODUCT_BOARD_PLATFORM),amlogic)
+ UBOOT_FRAGMENTS	+= glodroid/configuration/platform/common/amlogic/uboot.config
+-UBOOT_FRAGMENT_EMMC := $(UBOOT_OUT)/amlogic/uboot-emmc.config
+-UBOOT_FRAGMENT_SD := $(UBOOT_OUT)/amlogic/uboot-sd.config
++UBOOT_EMMC_DEV_INDEX := 2
++UBOOT_SD_DEV_INDEX := 1
+ POST_PROCESS_SCRIPT := glodroid/configuration/platform/common/amlogic/post-process-bootloader.sh
+ UBOOT_BINARY := $(UBOOT_OUT)/u-boot.bin
+ endif
 -- 
-2.37.2
+2.39.2
 

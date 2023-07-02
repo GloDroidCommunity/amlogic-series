@@ -1,7 +1,7 @@
-From 66211d6375a49d0d6d0b93c8ed42d696bb53aae6 Mon Sep 17 00:00:00 2001
+From 86df56edacf5acda6f76390b7a4de607ad0002c8 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 30 Apr 2023 17:28:31 +0300
-Subject: [PATCH 5/7] tools: Remove images before creating new.
+Subject: [PATCH 5/9] tools: Remove images before creating new.
 
 gensdimg.sh script is more happy after that.
 
@@ -35,5 +35,5 @@ index deb5953..c14607f 100644
  
  .PHONY: sdcard
 -- 
-2.37.2
+2.39.2
 
