@@ -1,7 +1,7 @@
-From 784304cd1b2856e41737bacf2f4522106ba82e63 Mon Sep 17 00:00:00 2001
+From 28af7361a3e817e74c800f9df1bb302b587e3150 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 30 Apr 2023 17:37:04 +0300
-Subject: [PATCH 6/9] platform: add Amlogic boards support changes
+Subject: [PATCH 09/10] platform: add Amlogic boards support changes
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 [RomanS: Rebased and modified after testing]
@@ -10,16 +10,12 @@ Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
  common/base/board.mk                          |    4 +
  platform/common/amlogic/amlogic_defconfig     | 4085 +++++++++++++++++
  .../common/amlogic/post-process-bootloader.sh |  151 +
- platform/common/amlogic/uboot-emmc.config     |    1 +
- platform/common/amlogic/uboot-sd.config       |    1 +
  platform/common/amlogic/uboot.config          |    6 +
- platform/uboot/platform_amlogic.h             |   12 +
- platform/uboot/uboot.mk                       |   16 +
- 8 files changed, 4276 insertions(+)
+ platform/uboot/platform_amlogic.h             |   15 +
+ platform/uboot/uboot.mk                       |   20 +
+ 6 files changed, 4281 insertions(+)
  create mode 100644 platform/common/amlogic/amlogic_defconfig
  create mode 100755 platform/common/amlogic/post-process-bootloader.sh
- create mode 100644 platform/common/amlogic/uboot-emmc.config
- create mode 100644 platform/common/amlogic/uboot-sd.config
  create mode 100644 platform/common/amlogic/uboot.config
  create mode 100644 platform/uboot/platform_amlogic.h
 
@@ -40,7 +36,7 @@ index b73abe5..33e9493 100644
  BOARD_MKBOOTIMG_ARGS  += --kernel_offset 0x80000 --second_offset 0x8800 --ramdisk_offset 0x3300000
 diff --git a/platform/common/amlogic/amlogic_defconfig b/platform/common/amlogic/amlogic_defconfig
 new file mode 100644
-index 0000000..2089a20
+index 0000000..52a3a16
 --- /dev/null
 +++ b/platform/common/amlogic/amlogic_defconfig
 @@ -0,0 +1,4085 @@
@@ -2502,7 +2498,7 @@ index 0000000..2089a20
 +CONFIG_DVB_ASCOT2E=m
 +CONFIG_DVB_HELENE=m
 +CONFIG_DVB_DUMMY_FE=m
-+CONFIG_DRM=m
++CONFIG_DRM=y
 +CONFIG_DRM_DP_CEC=y
 +CONFIG_DRM_I2C_CH7006=m
 +CONFIG_DRM_I2C_SIL164=m
@@ -2592,7 +2588,7 @@ index 0000000..2089a20
 +CONFIG_DRM_ANALOGIX_ANX7625=m
 +CONFIG_DRM_CDNS_MHDP8546=m
 +CONFIG_DRM_HISI_KIRIN=m
-+CONFIG_DRM_MESON=m
++CONFIG_DRM_MESON=y
 +CONFIG_DRM_BOCHS=m
 +CONFIG_DRM_GM12U320=m
 +CONFIG_DRM_SIMPLEDRM=m
@@ -4286,38 +4282,24 @@ index 0000000..94b126b
 +rm -fr $TMPDIR
 +
 +exit 0
-diff --git a/platform/common/amlogic/uboot-emmc.config b/platform/common/amlogic/uboot-emmc.config
-new file mode 100644
-index 0000000..d511943
---- /dev/null
-+++ b/platform/common/amlogic/uboot-emmc.config
-@@ -0,0 +1 @@
-+CONFIG_FASTBOOT_FLASH_MMC_DEV=2
-diff --git a/platform/common/amlogic/uboot-sd.config b/platform/common/amlogic/uboot-sd.config
-new file mode 100644
-index 0000000..3e6db24
---- /dev/null
-+++ b/platform/common/amlogic/uboot-sd.config
-@@ -0,0 +1 @@
-+CONFIG_FASTBOOT_FLASH_MMC_DEV=1
 diff --git a/platform/common/amlogic/uboot.config b/platform/common/amlogic/uboot.config
 new file mode 100644
-index 0000000..f37d674
+index 0000000..59f344c
 --- /dev/null
 +++ b/platform/common/amlogic/uboot.config
 @@ -0,0 +1,6 @@
 +#  KEEP ALPHABETICALLY SORTED
 +# CONFIG_DISTRO_DEFAULTS is not set
-+CONFIG_BOOTCOMMAND="if test ${boot_source} = \"usb\"; then fastboot 0; fi; setenv scriptaddr 0x53000000 ; if test ${boot_source} = \"sd\"; then setenv mmc_bootdev 1; else setenv mmc_bootdev 2; fi ; load mmc ${mmc_bootdev}:1 ${scriptaddr} boot.scr && source ${scriptaddr} "
++CONFIG_BOOTCOMMAND="if test ${boot_source} = \"usb\"; then fastboot 0; fi; setenv scriptaddr 0x53000000 ; if test ${boot_source} = \"sd\"; then setenv mmc_bootdev 1; else setenv mmc_bootdev 2; fi ; load mmc ${mmc_bootdev}:2 ${scriptaddr} boot.scr && source ${scriptaddr} "
 +CONFIG_FASTBOOT_BUF_ADDR=0x6000000
 +CONFIG_FASTBOOT_BUF_SIZE=0x1000000
 +CONFIG_USB_DWC2=y
 diff --git a/platform/uboot/platform_amlogic.h b/platform/uboot/platform_amlogic.h
 new file mode 100644
-index 0000000..3ca5be5
+index 0000000..085cddf
 --- /dev/null
 +++ b/platform/uboot/platform_amlogic.h
-@@ -0,0 +1,12 @@
+@@ -0,0 +1,15 @@
 +#pragma once
 +
 +#define PLATFORM_SETUP_ENV() \
@@ -4330,8 +4312,11 @@ index 0000000..3ca5be5
 + adtimg get dt --id=\$main_fdt_id dtb_start dtb_size main_fdt_index && \
 + cp.b \$dtb_start \$dtbaddr \$dtb_size &&                              \
 + fdt addr \$dtbaddr &&                                                 \
++
++#define BOOTLOADER_PARTITION_OVERRIDE() \
++ EXTENV(partitions, ";name=bootloader,start=512,size=2096640,uuid=\${uuid_gpt_bootloader}")
 diff --git a/platform/uboot/uboot.mk b/platform/uboot/uboot.mk
-index 5877beb..917c14c 100644
+index 5877beb..e116c91 100644
 --- a/platform/uboot/uboot.mk
 +++ b/platform/uboot/uboot.mk
 @@ -89,6 +89,14 @@ SYSFS_MMC0_PATH ?= fe330000.sdhci
@@ -4340,8 +4325,8 @@ index 5877beb..917c14c 100644
  
 +ifeq ($(PRODUCT_BOARD_PLATFORM),amlogic)
 +UBOOT_FRAGMENTS	+= glodroid/configuration/platform/common/amlogic/uboot.config
-+UBOOT_FRAGMENT_EMMC := $(UBOOT_OUT)/amlogic/uboot-emmc.config
-+UBOOT_FRAGMENT_SD := $(UBOOT_OUT)/amlogic/uboot-sd.config
++UBOOT_EMMC_DEV_INDEX := 2
++UBOOT_SD_DEV_INDEX := 1
 +POST_PROCESS_SCRIPT := glodroid/configuration/platform/common/amlogic/post-process-bootloader.sh
 +UBOOT_BINARY := $(UBOOT_OUT)/u-boot.bin
 +endif
@@ -4349,16 +4334,20 @@ index 5877beb..917c14c 100644
  $(UBOOT_FRAGMENT_EMMC):
  	echo "CONFIG_FASTBOOT_FLASH_MMC_DEV=$(UBOOT_EMMC_DEV_INDEX)" > $@
  
-@@ -206,6 +214,14 @@ $(PRODUCT_OUT)/bootloader-sd.img: $(UBOOT_BINARY) $(OVERLAY_FILES) $(ATF_BINARY)
+@@ -206,6 +214,18 @@ $(PRODUCT_OUT)/bootloader-sd.img: $(UBOOT_BINARY) $(OVERLAY_FILES) $(ATF_BINARY)
  	/usr/bin/mcopy -i $@ $(OVERLAY_FILES) ::overlays/
  endif
  
 +ifeq ($(PRODUCT_BOARD_PLATFORM),amlogic)
 +$(PRODUCT_OUT)/bootloader-emmc.img: $(UBOOT_BINARY) $(POST_PROCESS_SCRIPT)
-+	$(POST_PROCESS_SCRIPT) $(AMLOGIC_FIP_FILES) $(AMLOGIC_FIP_SOC_FAMILY) $@ $<.emmc EMMC
++	$(POST_PROCESS_SCRIPT) $(AMLOGIC_FIP_FILES) $(AMLOGIC_FIP_SOC_FAMILY) $@.tmp $<.emmc SD
++	dd if=$@.tmp of=$@ bs=512 skip=1
++	rm -f $@.tmp
 +
 +$(PRODUCT_OUT)/bootloader-sd.img: $(UBOOT_BINARY) $(POST_PROCESS_SCRIPT)
-+	$(POST_PROCESS_SCRIPT) $(AMLOGIC_FIP_FILES) $(AMLOGIC_FIP_SOC_FAMILY) $@ $<.sd SD
++	$(POST_PROCESS_SCRIPT) $(AMLOGIC_FIP_FILES) $(AMLOGIC_FIP_SOC_FAMILY) $@.tmp $<.sd SD
++	dd if=$@.tmp of=$@ bs=512 skip=1
++	rm -f $@.tmp
 +endif
 +
  ifneq ($(PRODUCT_HAS_EMMC),)
