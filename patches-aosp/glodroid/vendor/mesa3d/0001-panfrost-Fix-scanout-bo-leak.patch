@@ -1,0 +1,31 @@
+From 220a0951a3d6787bfbc4d889a9f814c36598bdfb Mon Sep 17 00:00:00 2001
+From: Roman Stratiienko <r.stratiienko@gmail.com>
+Date: Sun, 23 Jul 2023 18:09:15 +0300
+Subject: [PATCH] panfrost: Fix scanout bo leak
+
+Initialize scanout->refcnt to 1 so it can be correctly handled by
+the renderonly_scanout_destroy() function.
+
+Cc: mesa-stable
+Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
+---
+Link: https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/24296
+ src/gallium/winsys/panfrost/drm/panfrost_drm_winsys.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/gallium/winsys/panfrost/drm/panfrost_drm_winsys.c b/src/gallium/winsys/panfrost/drm/panfrost_drm_winsys.c
+index 6123e32dcbd..1804d1b107f 100644
+--- a/src/gallium/winsys/panfrost/drm/panfrost_drm_winsys.c
++++ b/src/gallium/winsys/panfrost/drm/panfrost_drm_winsys.c
+@@ -103,6 +103,8 @@ panfrost_create_kms_dumb_buffer_for_resource(struct pipe_resource *rsc,
+       goto free_dumb;
+    }
+ 
++   p_atomic_set(&scanout->refcnt, 1);
++
+    return scanout;
+ 
+ free_dumb:
+-- 
+2.39.2
+
