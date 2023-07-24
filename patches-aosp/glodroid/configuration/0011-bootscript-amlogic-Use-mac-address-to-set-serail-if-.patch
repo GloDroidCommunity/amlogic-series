@@ -1,0 +1,33 @@
+From 21b397197e56e90e443ba8cfd73ca5fc77a18b4b Mon Sep 17 00:00:00 2001
+From: Roman Stratiienko <r.stratiienko@gmail.com>
+Date: Mon, 24 Jul 2023 12:22:39 +0300
+Subject: [PATCH 11/11] bootscript: amlogic: Use mac address to set serail# if
+ it's missing
+
+Many amlogic devices do not have serial# variable set by the
+bootloader. Some boards use ethaddr to set the serial in uboot source
+code. We can do the same using the bootscript.
+
+Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
+---
+ platform/uboot/platform_amlogic.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/platform/uboot/platform_amlogic.h b/platform/uboot/platform_amlogic.h
+index 085cddf..86f6f3a 100644
+--- a/platform/uboot/platform_amlogic.h
++++ b/platform/uboot/platform_amlogic.h
+@@ -5,6 +5,10 @@
+  setenv loadaddr 0x1000000;  \
+  setenv vloadaddr 0x3000000; \
+  setenv dtboaddr 0x4000000;  \
++ if test "${serial#}" = "";  \
++ then \
++   setexpr "serial#" gsub ":" "" ${ethaddr}; \
++ fi; \
+ 
+ #define PLATFORM_HANDLE_FDT() \
+  adtimg get dt --id=\$main_fdt_id dtb_start dtb_size main_fdt_index && \
+-- 
+2.39.2
+
