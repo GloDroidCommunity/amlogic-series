@@ -1,4 +1,4 @@
-From 28af7361a3e817e74c800f9df1bb302b587e3150 Mon Sep 17 00:00:00 2001
+From b57d7dcba6701eaebb8d71efa932ac87e66821a7 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 30 Apr 2023 17:37:04 +0300
 Subject: [PATCH 09/10] platform: add Amlogic boards support changes
@@ -8,12 +8,12 @@ Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
 ---
  common/base/board.mk                          |    4 +
- platform/common/amlogic/amlogic_defconfig     | 4085 +++++++++++++++++
+ platform/common/amlogic/amlogic_defconfig     | 4086 +++++++++++++++++
  .../common/amlogic/post-process-bootloader.sh |  151 +
  platform/common/amlogic/uboot.config          |    6 +
  platform/uboot/platform_amlogic.h             |   15 +
  platform/uboot/uboot.mk                       |   20 +
- 6 files changed, 4281 insertions(+)
+ 6 files changed, 4282 insertions(+)
  create mode 100644 platform/common/amlogic/amlogic_defconfig
  create mode 100755 platform/common/amlogic/post-process-bootloader.sh
  create mode 100644 platform/common/amlogic/uboot.config
@@ -36,10 +36,10 @@ index b73abe5..33e9493 100644
  BOARD_MKBOOTIMG_ARGS  += --kernel_offset 0x80000 --second_offset 0x8800 --ramdisk_offset 0x3300000
 diff --git a/platform/common/amlogic/amlogic_defconfig b/platform/common/amlogic/amlogic_defconfig
 new file mode 100644
-index 0000000..52a3a16
+index 0000000..c45f400
 --- /dev/null
 +++ b/platform/common/amlogic/amlogic_defconfig
-@@ -0,0 +1,4085 @@
+@@ -0,0 +1,4086 @@
 +# CONFIG_WERROR is not set
 +# CONFIG_LOCALVERSION_AUTO is not set
 +CONFIG_POSIX_MQUEUE=y
@@ -3349,6 +3349,7 @@ index 0000000..52a3a16
 +CONFIG_DMABUF_HEAPS_DEFERRED_FREE=y
 +CONFIG_DMABUF_HEAPS_PAGE_POOL=y
 +CONFIG_DMABUF_HEAPS_SYSTEM=y
++CONFIG_DMABUF_HEAPS_CMA=y
 +CONFIG_UIO_HV_GENERIC=m
 +CONFIG_VFIO=y
 +CONFIG_VFIO_PCI=y
