@@ -1,7 +1,7 @@
-From f269a2a80dfde16c581115c3c79be1a658559e3e Mon Sep 17 00:00:00 2001
+From b68eab434066f22e8da01acaebe01d00180f06d9 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 19 Mar 2023 21:28:43 +0200
-Subject: [PATCH 01/10] modem: Start dbus and modemmanager after boot completed
+Subject: [PATCH 1/4] modem: Start dbus and modemmanager after boot completed
 
 This change should slightly reduce the boot time.
 

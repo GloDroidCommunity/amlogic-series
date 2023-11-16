@@ -1,7 +1,7 @@
-From 89761fb0712b4b72b93680878cbe94852e7f39d5 Mon Sep 17 00:00:00 2001
+From 530d53e42668dff9d15caac019a6099e62ac5d70 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Mon, 10 Jul 2023 17:28:48 +0300
-Subject: [PATCH 10/10] DONOTMERGE: Amlogic-specific changes
+Subject: [PATCH 3/4] DONOTMERGE: Amlogic-specific changes
 
 Changes are not compatible with the remaining platforms.
 Keep it as a local patch for now,
@@ -12,7 +12,7 @@ Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/platform/uboot/bootscript.cpp b/platform/uboot/bootscript.cpp
-index f419d65..01e6b6c 100644
+index f518650..1e82eb8 100644
 --- a/platform/uboot/bootscript.cpp
 +++ b/platform/uboot/bootscript.cpp
 @@ -27,7 +27,7 @@ BOOTLOADER_PARTITION_OVERRIDE()
