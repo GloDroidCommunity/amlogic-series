@@ -1,4 +1,4 @@
-# Android 13 for the Amlogic-based SBC series on top of the GloDroid project
+# Android 14 for the Amlogic-based SBC series on top of the GloDroid project
 
 [![GloDroid](https://img.shields.io/badge/GLODROID-PROJECT-blue)](https://github.com/GloDroid/glodroid_manifest)
 [![ProjectStatus](https://img.shields.io/badge/PROJECT-STATUS-yellowgreen)](https://github.com/GloDroidCommunity/amlogic-series/issues/1)
