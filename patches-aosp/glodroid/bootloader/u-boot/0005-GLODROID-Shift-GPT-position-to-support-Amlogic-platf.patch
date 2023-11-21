@@ -1,7 +1,7 @@
-From dfae66ee2f3056a1ba6a41aa08e81a9c6acdf99b Mon Sep 17 00:00:00 2001
+From 7aa9033fb02e5b89138434e341a60945a276f2b1 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 30 Apr 2023 17:01:18 +0300
-Subject: [PATCH 6/6] GLODROID: Shift GPT position to support Amlogic platform
+Subject: [PATCH 5/6] GLODROID: Shift GPT position to support Amlogic platform
 
 Amlogic expects bootloader on LBA1
 Shift the primary GPT header to 2MiB offset
@@ -26,5 +26,5 @@ index c68529b4da..8b8a99ebcc 100644
  #define GPT_ENTRY_SIZE			128
  
 -- 
-2.37.2
+2.39.2
 

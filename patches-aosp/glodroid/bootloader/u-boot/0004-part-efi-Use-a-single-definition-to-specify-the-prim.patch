@@ -1,7 +1,7 @@
-From 4eca829e1c9333c8c3c412e269ce315abf39f3c1 Mon Sep 17 00:00:00 2001
+From 7ec846bda988dedddfe47f73a589e43e0d868196 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 30 Apr 2023 14:34:21 +0300
-Subject: [PATCH 5/6] part: efi: Use a single definition to specify the primary
+Subject: [PATCH 4/6] part: efi: Use a single definition to specify the primary
  GPT position
 
 Some vendors (like Amlogic) store a bootloader at LBA1, therefore
@@ -60,5 +60,5 @@ index 80a44dc9f0..5f90b117d7 100644
  	gpt_h->last_usable_lba = cpu_to_le64(dev_desc->lba - 34);
  	gpt_h->partition_entry_lba =
 -- 
-2.37.2
+2.39.2
 

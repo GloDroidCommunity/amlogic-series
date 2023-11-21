@@ -1,7 +1,7 @@
-From 2ab9c7d867790d1222ae9f47dc2ece0b4fd18c7e Mon Sep 17 00:00:00 2001
+From 4a20df452b83ba6dc19cf5d1220361d77be7a202 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Sun, 2 Jul 2023 16:27:19 +0300
-Subject: [PATCH 2/4] AMLOGIC: tools: Extend deploy-gpt.img size to support
+Subject: [PATCH 2/5] AMLOGIC: tools: Extend deploy-gpt.img size to support
  offset GPT
 
 Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>

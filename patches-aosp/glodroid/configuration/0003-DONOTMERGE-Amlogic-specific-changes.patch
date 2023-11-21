@@ -1,7 +1,7 @@
-From 530d53e42668dff9d15caac019a6099e62ac5d70 Mon Sep 17 00:00:00 2001
+From 8dabf40437ffd7196804ddc8612586c378211acd Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Mon, 10 Jul 2023 17:28:48 +0300
-Subject: [PATCH 3/4] DONOTMERGE: Amlogic-specific changes
+Subject: [PATCH 3/5] DONOTMERGE: Amlogic-specific changes
 
 Changes are not compatible with the remaining platforms.
 Keep it as a local patch for now,
@@ -12,7 +12,7 @@ Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/platform/uboot/bootscript.cpp b/platform/uboot/bootscript.cpp
-index f518650..1e82eb8 100644
+index 35f3367..6158b6b 100644
 --- a/platform/uboot/bootscript.cpp
 +++ b/platform/uboot/bootscript.cpp
 @@ -27,7 +27,7 @@ BOOTLOADER_PARTITION_OVERRIDE()
@@ -22,9 +22,9 @@ index f518650..1e82eb8 100644
 -EXTENV(partitions, ";name=uboot-env,size=512K,uuid=\${uuid_gpt_reserved}")
 +EXTENV(partitions, ";name=uboot-env,start=3M,size=512K,uuid=\${uuid_gpt_reserved}")
  EXTENV(partitions, ";name=misc,size=512K,uuid=\${uuid_gpt_misc}")
+ EXTENV(partitions, ";name=frp,size=512K,uuid=\${uuid_gpt_frp}")
  EXTENV(partitions, ";name=boot_a,size=64M,uuid=\${uuid_gpt_boot_a}")
- EXTENV(partitions, ";name=boot_b,size=64M,uuid=\${uuid_gpt_boot_b}")
-@@ -46,7 +46,7 @@ EXTENV(partitions, ";name=userdata,size=-,uuid=\${uuid_gpt_userdata}")
+@@ -47,7 +47,7 @@ EXTENV(partitions, ";name=userdata,size=-,uuid=\${uuid_gpt_userdata}")
  setenv bootargs " init=/init rootwait ro androidboot.boottime=223.708 androidboot.selinux=permissive"
  EXTENV(bootargs, " androidboot.revision=1.0 androidboot.board_id=0x1234567 androidboot.serialno=${serial#}")
  EXTENV(bootargs, " firmware_class.path=/vendor/etc/firmware")
@@ -33,7 +33,7 @@ index f518650..1e82eb8 100644
  
  FUNC_BEGIN(enter_fastboot)
  #ifdef PRE_ENTER_FASTBOOT
-@@ -108,7 +108,7 @@ FUNC_END()
+@@ -109,7 +109,7 @@ FUNC_END()
  
  FUNC_BEGIN(bootcmd_prepare_env)
   setenv bootdevice_path STRESC(__SYSFS_MMC0_PATH__);

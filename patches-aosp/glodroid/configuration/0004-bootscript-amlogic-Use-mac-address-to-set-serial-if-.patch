@@ -1,7 +1,7 @@
-From 77421360678a4dfc367ca71f8b2b3bf0b1315da3 Mon Sep 17 00:00:00 2001
+From 74a931c222ae8b6e857ee8a85c446b7150dd6680 Mon Sep 17 00:00:00 2001
 From: Roman Stratiienko <r.stratiienko@gmail.com>
 Date: Mon, 24 Jul 2023 12:22:39 +0300
-Subject: [PATCH 4/4] bootscript: amlogic: Use mac address to set serial# if
+Subject: [PATCH 4/5] bootscript: amlogic: Use mac address to set serial# if
  it's missing
 
 Many amlogic devices do not have serial# variable set by the
